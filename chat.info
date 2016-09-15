@@ -1,0 +1,10 @@
+name = Chat
+description = Contact chat.
+package = CUSTOM
+
+stylesheets[all][] = css/chat.css
+;scripts[] = js/chat.js.
+
+; Information added by Drupal.org packaging script on 2014-10-14
+version = "7.x-alpha"
+core = "7.x"

@@ -1,0 +1,115 @@
+<?php
+
+/**
+* Implementation of hook_menu().
+*/
+function chat_menu() {
+  // Admin settings.
+  $items['admin/config/user-interface/chat'] = array(
+    'title' => 'Chat',
+    'description' => 'Custom chat',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('chat_admin_form'),
+    'access arguments' => array('administer site configuration'),
+  );
+  return $items;
+}
+
+/**
+ * Callback function for admin setting.
+ */
+function chat_admin_form($form, &$form_state) {
+
+  $settings = variable_get('chat_settings');
+
+  $options['helper'] = array(
+    '#markup' => t('<h3>Chat Options</h3>
+<p>Custom chat, set chat URL and load on an IFRAME</p>'),
+  );
+
+  $options['url'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Service URL'),
+    '#default_value' => $settings['url'],
+    '#size' => 60, 
+    '#maxlength' => 128, 
+    '#required' => TRUE,
+  );
+  $options['button_text'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Button Text'),
+    '#default_value' => $settings['button_text'],
+    '#size' => 60, 
+    '#maxlength' => 64, 
+    '#required' => TRUE,
+  );
+  $options['delay'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Delay in seconds'),
+    '#default_value' => $settings['delay'],
+    '#size' => 60, 
+    '#maxlength' => 2, 
+    '#required' => TRUE,
+  );
+
+  $options['#tree'] = TRUE;
+  $form['chat_settings'] = $options;
+
+  // Disable automatic defaults, which don't work with nested values.
+  return system_settings_form($form, FALSE);
+}
+
+/**
+ * Implementation of hook_block_info();
+ */
+function chat_block_info(){
+  $blocks['block_chat'] = array(
+    'info' => t('Chat TLS/UCAL'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  return $blocks;
+}
+
+/**
+ * Implementation of hook_block_view();
+*/
+function chat_block_view($delta = '') {
+  $settings = variable_get('chat_settings');
+  $block = array();
+  switch ($delta) {
+    case 'block_chat':
+      $block['content'] = theme('chat', array(
+        'url' => $settings['url'],
+        'button_text' => $settings['button_text'],
+	  ));
+      break;
+  }
+  return $block;
+}
+
+function chat_theme() {
+  return array(
+    'chat' => array(
+      'template' => 'chat',
+      'variables' => array(
+        'url' => '#',
+        'button_text' => 'Conectarse con un operador',
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_preprocess_THEME(&$variables).
+ */
+function chat_preprocess_chat(&$variables) {
+  $module_path = drupal_get_path('module', 'chat');
+  $settings = variable_get('chat_settings');
+  drupal_add_js(array(
+    'chat' => array(
+       'delay' => $settings['delay'],
+    ),
+  ),
+  'setting');
+  drupal_add_js($module_path . '/js/chat.js');
+}
