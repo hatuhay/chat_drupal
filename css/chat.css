@@ -1,0 +1,15 @@
+#block-chat-block-chat {  position: fixed;  bottom: 0px;  right: 0px;  z-index: 100;}#block-chat-block-chat iframe {  height: 421px;}
+#chat-button {  font-weight: 14px;  color: white;  cursor: pointer;  padding: 8px 10px;  background: #0EB49F;}
+#chat-header {  background: #DFDFDF;  height: 30px;}#chat-header button {  float: right;}#chat-inner {  display: none;}
+
+#chat-header { width: 100%; background: white none repeat scroll 0% 0%; padding: 5px; }
+#chat-header button { border: 0px none; background: transparent none repeat scroll 0% 0%; font-size: 24px; }
+
+#chat-button u { 
+	background: rgba(0, 0, 0, 0) url("https://img.zohostatic.com/salesiq/Sep_30_2016_https/images/float-sprite.png") no-repeat scroll 0 0;
+	background-position: -85px -836px;
+     display: block;
+    float: left;
+    height: 18px;
+    margin-right: 6px;
+    width: 18px; }

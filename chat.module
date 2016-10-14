@@ -105,11 +105,26 @@ function chat_theme() {
 function chat_preprocess_chat(&$variables) {
   $module_path = drupal_get_path('module', 'chat');
   $settings = variable_get('chat_settings');
-  drupal_add_js(array(
-    'chat' => array(
-       'delay' => $settings['delay'],
+  $delay = 0;
+  //If exist the session the delay = 0
+  if (!isset($_SESSION['ucal_chat_session'])) {
+    $_SESSION['ucal_chat_session'] = 1;
+    $delay = $settings['delay'];
+  }
+  drupal_add_js(
+    array(
+      'chat' => array(
+        'delay' => $delay,
+      ),
     ),
-  ),
-  'setting');
+    array('type' =>'setting')
+  );
   drupal_add_js($module_path . '/js/chat.js');
+}
+
+/**
+ * Implements hook_init().
+ */
+function chat_init() {
+  //global $user;
 }
